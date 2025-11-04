@@ -1,28 +1,28 @@
 {
     "images": [
         {
-            "imgPath": "img/places/australia.jpg",
-            "imgLocation": "Australia",
-            "description": "Loch Ard Gorge",
-            "date": "01/01/2016"
+            "imgPath": "img/places/london.png",
+            "imgLocation": "London",
+            "description": "Palace of Westminster and Big Ben",
+            "bestSeason": "Spring"
         },
         {
-            "imgPath": "img/places/austria.jpg",
-            "imgLocation": "Austria",
-            "description": "Austrian chapel",
-            "date": "01/02/2016"
-        },
-        {
-            "imgPath": "img/places/france.jpg",
+            "imgPath": "img/places/paris.png",
             "imgLocation": "Paris",
             "description": "Eiffel Tower",
-            "date": "01/03/2016"
+            "bestSeason": "Fall"
         },
         {
             "imgPath": "img/places/greece.jpg",
             "imgLocation": "Greece",
-            "description": "Greek coastline",
-            "date": "01/04/2016"
+            "description": "Acropolis",
+            "bestSeason": "Spring"
+        },
+        {
+            "imgPath": "img/places/australia.png",
+            "imgLocation": "Australia",
+            "description": "Sydney Opera House",
+            "bestSeason": "Winter"
         },
         {
             "imgPath": "img/places/hungary.jpg",
