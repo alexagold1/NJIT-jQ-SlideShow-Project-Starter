@@ -111,3 +111,17 @@ function showPrevPhoto() {
   }
   swapPhoto();
 }
+
+let slideshowTimer = null; // store the timer ID
+
+function startTimer() {
+  // Prevent multiple timers from running
+  if (slideshowTimer !== null) {
+    clearInterval(slideshowTimer);
+  }
+
+  // Call showNextPhoto() every mWaitTime milliseconds
+  slideshowTimer = setInterval(() => {
+    showNextPhoto();
+  }, mWaitTime);
+}
