@@ -4,81 +4,93 @@ const mUrl = "https://your-json-url.com"; // Replace with actual JSON URL
 const mWaitTime = 5000; // Timer interval in milliseconds
 
 $(document).ready(() => {
-  $(".details").hide(); // Hide details initially
+  // Hide the details section initially
+  $(".details").hide();
 
-  // Call a function here to start the timer for the slideshow
+  // MORE BUTTON: toggle details and rotate indicator
+  $(".moreIndicator").click(function () {
+    $(this).toggleClass("rot90 rot270"); // rotates the indicator 180 degrees
+    $(".details").slideToggle(); // shows/hides the details
+  });
 
-  // Select the moreIndicator button and add a click event to:
-  // - toggle the rotation classes (rot90 and rot270)
-  // - slideToggle the visibility of the .details section
+  // NEXT BUTTON: show the next photo
+  $("#nextPhoto").click(function () {
+    showNextPhoto();
+  });
 
-  // Select the "Next Photo" button and add a click event to call showNextPhoto
+  // PREVIOUS BUTTON: show the previous photo
+  $("#prevPhoto").click(function () {
+    showPrevPhoto();
+  });
 
-  // Select the "Previous Photo" button and add a click event to call showPrevPhoto
-
-  // Call fetchJSON() to load the initial set of images
+  // Load the JSON data and display the first image
   fetchJSON();
 });
 
-// Function to fetch JSON data and store it in mImages
 function fetchJSON() {
-  // Function to fetch JSON data and store it in mImages
-  function fetchJSON() {
-    mImages = [];
+  mImages = [];
 
-    $.ajax({
-      url: mUrl,
-      method: "GET",
-      dataType: "json",
-      cache: false,
-      success: function (data) {
-        let imageArray = null;
+  $.ajax({
+    url: mUrl,
+    method: "GET",
+    dataType: "json",
+    cache: false,
+    success: function (data) {
+      let imageArray = null;
 
-        if (Array.isArray(data)) {
-          imageArray = data;
-        } else if (data && Array.isArray(data.images)) {
-          imageArray = data.images;
-        } else if (data && Array.isArray(data.photos)) {
-          imageArray = data.photos;
-        } else {
-          console.warn("Unexpected JSON structure from", mUrl, data);
-        }
+      if (Array.isArray(data)) {
+        imageArray = data;
+      } else if (data && Array.isArray(data.images)) {
+        imageArray = data.images;
+      } else if (data && Array.isArray(data.photos)) {
+        imageArray = data.photos;
+      } else {
+        console.warn("Unexpected JSON structure from", mUrl, data);
+      }
 
-        if (imageArray && imageArray.length > 0) {
-          imageArray.forEach((item) => {
-            const img = {
-              imgPath: item.imgPath || item.path || item.url || item.src || "",
-              imgLocation:
-                item.imgLocation || item.location || item.place || "",
-              description: item.description || item.desc || "",
-              date: item.date || item.imgDate || "",
-            };
-            mImages.push(img);
-          });
+      if (imageArray && imageArray.length > 0) {
+        imageArray.forEach((item) => {
+          const img = {
+            imgPath: item.imgPath || item.path || item.url || item.src || "",
+            imgLocation: item.imgLocation || item.location || item.place || "",
+            description: item.description || item.desc || "",
+            bestSeason: item.bestSeason || item.season || "",
+          };
+          mImages.push(img);
+        });
 
-          mCurrentIndex = 0;
-          swapPhoto();
-        } else {
-          console.error("No images found in JSON response from", mUrl);
-        }
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        console.error(
-          "Failed to load JSON from",
-          mUrl,
-          textStatus,
-          errorThrown
-        );
-      },
-    });
-  }
+        // Display the first image immediately
+        mCurrentIndex = 0;
+        swapPhoto();
+      } else {
+        console.error("No images found in JSON response from", mUrl);
+      }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      console.error("Failed to load JSON from", mUrl, textStatus, errorThrown);
+    },
+  });
 }
 
 // Function to swap and display the next photo in the slideshow
 function swapPhoto() {
-  // Access mImages[mCurrentIndex] to update the image source and details
-  // Update the #photo element's src attribute with the current image's path
-  // Update the .location, .description, and .date elements with the current image's details
+  // Make sure we have at least one image
+  if (mImages.length === 0) {
+    console.warn("No images to display.");
+    return;
+  }
+
+  // Get the current image object
+  const currentImage = mImages[mCurrentIndex];
+
+  // Update the main photo
+  $("#photo").attr("src", currentImage.imgPath);
+
+  // Update metadata
+  $("#photo").attr("src", currentImage.imgPath);
+  $(".location").text("Location: " + currentImage.imgLocation);
+  $(".description").text("Description: " + currentImage.description);
+  $(".bestSeason").text("Best Season: " + currentImage.bestSeason);
 }
 
 // Advances to the next photo, loops to the first photo if the end of array is reached
