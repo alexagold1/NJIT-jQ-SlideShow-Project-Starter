@@ -93,10 +93,14 @@ function swapPhoto() {
   $(".bestSeason").text("Best Season: " + currentImage.bestSeason);
 }
 
-// Advances to the next photo, loops to the first photo if the end of array is reached
 function showNextPhoto() {
-  // Increment mCurrentIndex and call swapPhoto()
-  // Ensure it loops back to the beginning if mCurrentIndex exceeds array length
+  if (mImages.length === 0) return; // safety check
+
+  mCurrentIndex++;
+  if (mCurrentIndex >= mImages.length) {
+    mCurrentIndex = 0; // loop back to the first image
+  }
+  swapPhoto();
 }
 
 // Goes to the previous photo, loops to the last photo if mCurrentIndex goes negative
