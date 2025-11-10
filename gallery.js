@@ -102,3 +102,12 @@ function showNextPhoto() {
   }
   swapPhoto();
 }
+function showPrevPhoto() {
+  if (mImages.length === 0) return; // safety check
+
+  mCurrentIndex--;
+  if (mCurrentIndex < 0) {
+    mCurrentIndex = mImages.length - 1; // loop to the last image
+  }
+  swapPhoto();
+}
