@@ -76,20 +76,20 @@ body {
   margin: 10px 0;
 }
 
-/* Add CSS styles to rotate the element 90deg
-Make it animate nicely. You'll need CSS3 for this */
+/* Rotate 90 degrees clockwise */
 .rot90 {
-  /* Add 90-degree rotation */
+  transform: rotate(90deg);
+  transition: transform 0.3s ease;
 }
 
-/* Add CSS styles to rotate the element 180deg
-Make it animate nicely. You'll need CSS3 for this */
+/* Rotate 180 degrees */
 .rot180 {
-  /* Add 180-degree rotation */
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
 }
 
-/* Add CSS styles to rotate the element 270deg
-Make it animate nicely. You'll need CSS3 for this */
+/* Rotate 270 degrees (or -90 degrees) */
 .rot270 {
-  /* Add 270-degree rotation */
+  transform: rotate(270deg);
+  transition: transform 0.3s ease;
 }
