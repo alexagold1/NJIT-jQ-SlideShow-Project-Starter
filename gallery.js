@@ -3,27 +3,26 @@ let mImages = []; // Array to hold GalleryImage objects
 const mUrl = "images.json"; // Replace with actual JSON URL
 const mWaitTime = 5000; // Timer interval in milliseconds
 
+let slideshowTimer = null; // store the timer ID
+
 $(document).ready(() => {
-  // Hide the details section initially
   $(".details").hide();
 
-  // MORE BUTTON: toggle details and rotate indicator
   $(".moreIndicator").click(function () {
-    $(this).toggleClass("rot90 rot270"); // rotates the indicator 180 degrees
-    $(".details").slideToggle(); // shows/hides the details
+    $(this).toggleClass("rot90 rot270");
+    $(".details").slideToggle();
   });
 
-  // NEXT BUTTON: show the next photo
   $("#nextPhoto").click(function () {
     showNextPhoto();
+    resetTimer(); // restart timer after manual click
   });
 
-  // PREVIOUS BUTTON: show the previous photo
   $("#prevPhoto").click(function () {
     showPrevPhoto();
+    resetTimer(); // restart timer after manual click
   });
 
-  // Load the JSON data and display the first image
   fetchJSON();
 });
 
@@ -38,15 +37,9 @@ function fetchJSON() {
     success: function (data) {
       let imageArray = null;
 
-      if (Array.isArray(data)) {
-        imageArray = data;
-      } else if (data && Array.isArray(data.images)) {
-        imageArray = data.images;
-      } else if (data && Array.isArray(data.photos)) {
-        imageArray = data.photos;
-      } else {
-        console.warn("Unexpected JSON structure from", mUrl, data);
-      }
+      if (Array.isArray(data)) imageArray = data;
+      else if (data && Array.isArray(data.images)) imageArray = data.images;
+      else if (data && Array.isArray(data.photos)) imageArray = data.photos;
 
       if (imageArray && imageArray.length > 0) {
         imageArray.forEach((item) => {
@@ -62,6 +55,8 @@ function fetchJSON() {
         // Display the first image immediately
         mCurrentIndex = 0;
         swapPhoto();
+
+        startTimer();
       } else {
         console.error("No images found in JSON response from", mUrl);
       }
@@ -72,21 +67,10 @@ function fetchJSON() {
   });
 }
 
-// Function to swap and display the next photo in the slideshow
 function swapPhoto() {
-  // Make sure we have at least one image
-  if (mImages.length === 0) {
-    console.warn("No images to display.");
-    return;
-  }
-
-  // Get the current image object
+  if (mImages.length === 0) return;
   const currentImage = mImages[mCurrentIndex];
 
-  // Update the main photo
-  $("#photo").attr("src", currentImage.imgPath);
-
-  // Update metadata
   $("#photo").attr("src", currentImage.imgPath);
   $(".location").text("Location: " + currentImage.imgLocation);
   $(".description").text("Description: " + currentImage.description);
@@ -94,34 +78,24 @@ function swapPhoto() {
 }
 
 function showNextPhoto() {
-  if (mImages.length === 0) return; // safety check
-
-  mCurrentIndex++;
-  if (mCurrentIndex >= mImages.length) {
-    mCurrentIndex = 0; // loop back to the first image
-  }
+  if (mImages.length === 0) return;
+  mCurrentIndex = (mCurrentIndex + 1) % mImages.length;
   swapPhoto();
 }
+
 function showPrevPhoto() {
-  if (mImages.length === 0) return; // safety check
-
-  mCurrentIndex--;
-  if (mCurrentIndex < 0) {
-    mCurrentIndex = mImages.length - 1; // loop to the last image
-  }
+  if (mImages.length === 0) return;
+  mCurrentIndex = (mCurrentIndex - 1 + mImages.length) % mImages.length;
   swapPhoto();
 }
-
-let slideshowTimer = null; // store the timer ID
 
 function startTimer() {
-  // Prevent multiple timers from running
-  if (slideshowTimer !== null) {
-    clearInterval(slideshowTimer);
-  }
+  if (slideshowTimer !== null) clearInterval(slideshowTimer);
+  slideshowTimer = setInterval(showNextPhoto, mWaitTime);
+}
 
-  // Call showNextPhoto() every mWaitTime milliseconds
-  slideshowTimer = setInterval(() => {
-    showNextPhoto();
-  }, mWaitTime);
+// Reset timer after manual click
+function resetTimer() {
+  if (slideshowTimer !== null) clearInterval(slideshowTimer);
+  slideshowTimer = setInterval(showNextPhoto, mWaitTime);
 }
